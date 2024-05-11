@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="bg">#FFFFFF</color>
+    <color name="primary">#282931</color>
+    <color name="secondary">#F3F3F3</color>
+    <color name="tertiary">#D6D6D6</color>
+
+    <color name="btnMain">#000000</color>
+    <color name="btnPrimary">#FE7A00</color>
+    <color name="btnPrimaryClk">#FE5000</color>
+    <color name="btnSecondary">#00C2FF</color>
+    <color name="btnSecondaryClk">#0099FF</color>
+    <color name="btnDanger">#fc5454</color>
+    <color name="btnDangerClk">#ff7478</color>
+
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#AAAAAA</color>
+    <color name="textColorMain">#000000</color>
+    <color name="searchBg">#787878</color>
+
+</resources>

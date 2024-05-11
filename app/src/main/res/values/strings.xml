@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Shoplet</string>
+    <string name="welcome_title">Welcome To Shoplet!</string>
+    <string name="welcome_sub_title">Get Everything You Need in Your Life</string>
+</resources>
