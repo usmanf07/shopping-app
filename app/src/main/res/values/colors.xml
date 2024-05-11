@@ -17,6 +17,6 @@
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="textColorSecondary">#AAAAAA</color>
     <color name="textColorMain">#000000</color>
-    <color name="searchBg">#787878</color>
+    <color name="searchBg">#C4C4C4</color>
 
 </resources>
