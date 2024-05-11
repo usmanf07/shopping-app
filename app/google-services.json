@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "479280718279",
+    "project_id": "shoplet-app",
+    "storage_bucket": "shoplet-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479280718279:android:7ef6167e3eb052f29379e2",
+        "android_client_info": {
+          "package_name": "com.example.shoplet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA0m2l51hmrwrEmL5uOqZgttqV4KbbCQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
