@@ -13,6 +13,7 @@
     <color name="btnSecondaryClk">#0099FF</color>
     <color name="btnDanger">#fc5454</color>
     <color name="btnDangerClk">#ff7478</color>
+    <color name="btnbg">#E7E7E7</color>
 
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="textColorSecondary">#AAAAAA</color>
