@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/cardview_light_background"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:padding="10dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/orderDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order ID"
+        android:fontFamily="@font/barlow_bold"
+        android:textSize="22sp"
+
+        android:textColor="@color/textColorMain"
+        android:layout_marginStart="8dp" />
+
+    <TextView
+        android:id="@+id/tvitemPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total: $0.00"
+        android:textSize="18sp"
+        android:textColor="@color/btnDanger"
+        android:layout_below="@id/orderDate"
+        android:fontFamily="@font/barlow_bold"
+        android:layout_alignStart="@id/orderDate"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/tvMethod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payment Method"
+        android:textSize="18sp"
+        android:textColor="@color/primary"
+        android:layout_below="@id/tvitemPrice"
+        android:fontFamily="@font/barlow_medium"
+        android:layout_alignStart="@id/orderDate"
+        android:layout_marginTop="4dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="45dp"
+            android:layout_height="31dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_details" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivLogo"
+            android:layout_alignStart="@id/ivLogo"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/barlow_bold"
+            android:text="In Process"
+            android:textColor="@color/btnDanger"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

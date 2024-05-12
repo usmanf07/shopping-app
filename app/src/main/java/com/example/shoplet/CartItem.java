@@ -1,40 +1,20 @@
 package com.example.shoplet;
 
 public class CartItem {
-    private int imageResource;
-    private String name;
-    private double price;
+    Product product;
     private int quantity;
 
-    public CartItem(int imageResource, String name, double price, int quantity) {
-        this.imageResource = imageResource;
-        this.name = name;
-        this.price = price;
+    public CartItem(Product product, int quantity) {
+        this.product = product;
         this.quantity = quantity;
     }
 
-    public int getImageResource() {
-        return imageResource;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setImageResource(int imageResource) {
-        this.imageResource = imageResource;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getQuantity() {

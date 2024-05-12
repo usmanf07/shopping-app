@@ -1,2 +1,7 @@
-package com.example.shoplet;public class Constants {
+package com.example.shoplet;
+
+
+public class Constants {
+
+    public static String jazzCashResponse = "jazzCashResponse";
 }

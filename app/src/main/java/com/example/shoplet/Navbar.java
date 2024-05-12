@@ -1,6 +1,7 @@
 package com.example.shoplet;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,9 +22,10 @@ public class Navbar extends AppCompatActivity {
         ivCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(Navbar.this, CartActivity.class);
-                startActivity(intent);
+                Log.d("ClickTest", "Cart ImageView clicked");
+                Toast.makeText(Navbar.this, "Cart button clicked!", Toast.LENGTH_SHORT).show();
+                //Intent intent = new Intent(Navbar.this, CartActivity.class);
+                //startActivity(intent);
             }
         });
 

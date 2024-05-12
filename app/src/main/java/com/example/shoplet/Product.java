@@ -7,6 +7,7 @@ public class Product implements Serializable{
     private String description;
 
     private String image;
+    private String id;
     private boolean freedelivery;
     private String fullname;
     private String name;
@@ -22,8 +23,9 @@ public class Product implements Serializable{
         // Default constructor required for Firebase
     }
 
-    public Product(String image, String description, boolean freedelivery, String fullname, String name, boolean onsale,
+    public Product(String id, String image, String description, boolean freedelivery, String fullname, String name, boolean onsale,
                    int price, Map<String, Rating> ratings, int sales, int stock, String categoryID, double totalrating) {
+        this.id = id;
         this.image = image;
         this.description = description;
         this.freedelivery = freedelivery;
@@ -36,6 +38,14 @@ public class Product implements Serializable{
         this.stock = stock;
         this.categoryID = categoryID;
         this.totalrating = totalrating;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescription() {

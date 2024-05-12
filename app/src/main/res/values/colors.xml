@@ -14,9 +14,10 @@
     <color name="btnDanger">#fc5454</color>
     <color name="btnDangerClk">#ff7478</color>
     <color name="btnbg">#E7E7E7</color>
-
+    <color name="btnDisabled">#AAAAAA</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="textColorSecondary">#AAAAAA</color>
+    <color name="textColorDanger">#E30E0E</color>
     <color name="textColorMain">#000000</color>
     <color name="searchBg">#C4C4C4</color>
 
