@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +43,7 @@ public class ProductActivity extends AppCompatActivity {
             public void onProductClick(int position) {
                 Product clickedProduct = productList.get(position);
                 Intent intent = new Intent(ProductActivity.this, ProductDetailActivity.class);
-                intent.putExtra("product", (CharSequence) clickedProduct);
+                intent.putExtra("product", clickedProduct);
                 startActivity(intent);
             }
         });
@@ -58,6 +59,7 @@ public class ProductActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 productList.clear();
                 for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
+                    //Log.d("FirebaseData", "Product Snapshot: " + productSnapshot.getValue());
                     Product product = new Product();
                     product.setDescription(productSnapshot.child("description").getValue(String.class));
                     product.setFreedelivery(productSnapshot.child("freedelivery").getValue(Boolean.class));
@@ -83,6 +85,7 @@ public class ProductActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("FirebaseData", "Failed to retrieve products: " + databaseError.getMessage(), databaseError.toException());
                 Toast.makeText(ProductActivity.this, "Failed to retrieve products: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

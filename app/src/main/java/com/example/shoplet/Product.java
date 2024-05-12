@@ -1,8 +1,9 @@
 package com.example.shoplet;
 
 import java.util.Map;
-
-public class Product {
+import java.io.Serializable;
+public class Product implements Serializable{
+    private static final long serialVersionUID = 1L;
     private String description;
     private boolean freedelivery;
     private String fullname;
