@@ -35,37 +35,42 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
-        holder.productName.setText(product.getName());
-        holder.productPrice.setText(product.getPrice());
-        holder.productImage.setImageResource(product.getImageResId());
-
-        // Set click listener
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int clickedPosition = holder.getAdapterPosition();
-                if (clickedPosition != RecyclerView.NO_POSITION && onProductClickListener != null) {
-                    onProductClickListener.onProductClick(clickedPosition);
-                }
-            }
-        });
+        holder.bind(product);
     }
-
 
     @Override
     public int getItemCount() {
         return productList.size();
     }
 
-    public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView productName, productPrice;
-        ImageView productImage;
+    public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private TextView productName;
+        private TextView productPrice;
+        private TextView productRating;
+        private ImageView productImage;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.product_name);
             productPrice = itemView.findViewById(R.id.product_price);
             productImage = itemView.findViewById(R.id.product_image);
+            productRating = itemView.findViewById(R.id.product_rating);
+            itemView.setOnClickListener(this);
+        }
+
+        public void bind(Product product) {
+            productName.setText(product.getName());
+            productPrice.setText(String.valueOf(product.getPrice()));
+            productRating.setText(String.valueOf(product.getTotalrating()) + "/5.0");
+            // Set image if you have image URL in your Product model
+            // You can use libraries like Picasso or Glide for loading images
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (onProductClickListener != null) {
+                onProductClickListener.onProductClick(getAdapterPosition());
+            }
         }
     }
 }

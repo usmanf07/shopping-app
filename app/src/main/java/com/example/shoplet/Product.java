@@ -1,20 +1,62 @@
 package com.example.shoplet;
 
-import java.io.Serializable;
+import java.util.Map;
 
-public class Product implements Serializable {
+public class Product {
+    private String description;
+    private boolean freedelivery;
+    private String fullname;
     private String name;
-    private double ratings;
-    private String price;
-    private int imageResId;
+    private boolean onsale;
+    private int price;
+    private Map<String, Rating> ratings;
+    private int sales;
+    private int stock;
+    private String categoryID;
+    private double totalrating;
 
-    public Product(String name, double ratings, String price, int imageResId) {
-        this.name = name;
-        this.ratings = ratings;
-        this.price = price;
-        this.imageResId = imageResId;
+    public Product() {
+        // Default constructor required for Firebase
     }
 
+    public Product(String description, boolean freedelivery, String fullname, String name, boolean onsale,
+                   int price, Map<String, Rating> ratings, int sales, int stock, String categoryID, double totalrating) {
+        this.description = description;
+        this.freedelivery = freedelivery;
+        this.fullname = fullname;
+        this.name = name;
+        this.onsale = onsale;
+        this.price = price;
+        this.ratings = ratings;
+        this.sales = sales;
+        this.stock = stock;
+        this.categoryID = categoryID;
+        this.totalrating = totalrating;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isFreedelivery() {
+        return freedelivery;
+    }
+
+    public void setFreedelivery(boolean freedelivery) {
+        this.freedelivery = freedelivery;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
 
     public String getName() {
         return name;
@@ -24,27 +66,59 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public double getRatings() {
-        return ratings;
+    public boolean isOnsale() {
+        return onsale;
     }
 
-    public void setRatings(double description) {
-        this.ratings = description;
+    public void setOnsale(boolean onsale) {
+        this.onsale = onsale;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public int getImageResId() {
-        return imageResId;
+    public Map<String, Rating> getRatings() {
+        return ratings;
     }
 
-    public void setImageResId(int imageResId) {
-        this.imageResId = imageResId;
+    public void setRatings(Map<String, Rating> ratings) {
+        this.ratings = ratings;
+    }
+
+    public int getSales() {
+        return sales;
+    }
+
+    public void setSales(int sales) {
+        this.sales = sales;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public String getCategoryID() {
+        return categoryID;
+    }
+
+    public void setCategoryID(String categoryID) {
+        this.categoryID = categoryID;
+    }
+
+    public double getTotalrating() {
+        return totalrating;
+    }
+
+    public void setTotalrating(double totalrating) {
+        this.totalrating = totalrating;
     }
 }

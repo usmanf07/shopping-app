@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+
 public class ProductDetailActivity extends AppCompatActivity {
 
     @Override
@@ -28,13 +29,15 @@ public class ProductDetailActivity extends AppCompatActivity {
             Product product = (Product) intent.getSerializableExtra("product");
 
             // Set product details to views
-            imageViewProduct.setImageResource(product.getImageResId());
-            productName.setText(product.getName());
-            productRating.setText(String.valueOf(product.getRatings()));
-            productPrice.setText(product.getPrice());
+            // Assuming you don't have an image resource ID in your Product model
+            // imageViewProduct.setImageResource(product.getImageResId());
 
-//            // Sample specifications, replace with actual product specifications
-//            productSpecifications.setText("Specification 1: Value 1\nSpecification 2: Value 2\nSpecification 3: Value 3\nSpecification 4: Value 4");
+            // Set other product details
+            productName.setText(product.getName());
+            productRating.setText(String.valueOf(product.getTotalrating())); // Assuming you want to display total rating
+            productPrice.setText(String.valueOf(product.getPrice()));
+
+            // You can set other product details here if needed
         }
 
         // Button click listeners
