@@ -67,7 +67,7 @@ public class ProductActivity extends AppCompatActivity {
                     product.setName(productSnapshot.child("name").getValue(String.class));
                     product.setOnsale(productSnapshot.child("onsale").getValue(Boolean.class));
                     product.setPrice(productSnapshot.child("price").getValue(Integer.class));
-
+                    product.setImage(productSnapshot.child("image").getValue(String.class));
                     Map<String, Rating> ratings = new HashMap<>();
                     for (DataSnapshot ratingSnapshot : productSnapshot.child("ratings").getChildren()) {
                         ratings.put(ratingSnapshot.getKey(), ratingSnapshot.getValue(Rating.class));

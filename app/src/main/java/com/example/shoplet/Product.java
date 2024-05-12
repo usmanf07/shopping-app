@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class Product implements Serializable{
     private static final long serialVersionUID = 1L;
     private String description;
+
+    private String image;
     private boolean freedelivery;
     private String fullname;
     private String name;
@@ -20,8 +22,9 @@ public class Product implements Serializable{
         // Default constructor required for Firebase
     }
 
-    public Product(String description, boolean freedelivery, String fullname, String name, boolean onsale,
+    public Product(String image, String description, boolean freedelivery, String fullname, String name, boolean onsale,
                    int price, Map<String, Rating> ratings, int sales, int stock, String categoryID, double totalrating) {
+        this.image = image;
         this.description = description;
         this.freedelivery = freedelivery;
         this.fullname = fullname;
@@ -41,6 +44,14 @@ public class Product implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getImage() {
+        return this.image;
     }
 
     public boolean isFreedelivery() {

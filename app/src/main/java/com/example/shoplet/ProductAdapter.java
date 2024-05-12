@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -62,8 +65,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productName.setText(product.getName());
             productPrice.setText(String.valueOf(product.getPrice()));
             productRating.setText(String.valueOf(product.getTotalrating()) + "/5.0");
+
             // Set image if you have image URL in your Product model
             // You can use libraries like Picasso or Glide for loading images
+            if (product.getImage() != null) {
+                Picasso.get()
+                        .load(product.getImage())
+                        .into(productImage);
+            }
         }
 
         @Override
