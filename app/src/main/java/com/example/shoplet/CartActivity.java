@@ -1,19 +1,19 @@
 package com.example.shoplet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 
-public class CartActivity extends AppCompatActivity {
-
+public class CartActivity extends AppCompatActivity implements CartInteractionListener{
     private ListView cartListView;
-    private TextView totalTextView;
+    private TextView totalTextView, totalItemsTextView;
     private Button checkoutButton;
     private CartItemAdapter adapter;
-    private ArrayList<CartItem> itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,35 +21,52 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.cart);
 
         cartListView = findViewById(R.id.cartListView);
-        totalTextView = findViewById(R.id.totalTextView);
-        checkoutButton = findViewById(R.id.checkoutButton);
+        totalTextView = findViewById(R.id.tvTotalPrice);
+        checkoutButton = findViewById(R.id.btnCheckout);
+        totalItemsTextView = findViewById(R.id.tvTotalItems);
 
-
-        itemList = new ArrayList<>();
-
-        itemList.add(new CartItem(R.drawable.phone, "Item 1", 10.99, 2));
-        itemList.add(new CartItem(R.drawable.phone, "Item 2", 5.99, 1));
-        itemList.add(new CartItem(R.drawable.phone, "Item 3", 7.49, 3));
-
-
-        adapter = new CartItemAdapter(this, itemList);
+        // Set up the adapter with the cart items from the CartManager
+        adapter = new CartItemAdapter(this, CartManager.getInstance().getCartItems(), this);
         cartListView.setAdapter(adapter);
 
-
-        double total = calculateTotal(itemList);
-        totalTextView.setText("Total: $" + total);
-
+        // Initially update the total amount
+        updateTotal();
 
         checkoutButton.setOnClickListener(view -> {
-            // Handle checkout process
+            Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
+            double total = 0;
+            ArrayList<String> productDetails = new ArrayList<>();
+            for (CartItem item : CartManager.getInstance().getCartItems()) {
+                total += item.getProduct().getPrice() * item.getQuantity();
+                String detail = item.getProduct().getId() + ":" + item.getQuantity() + ":" + item.getProduct().getName(); // Use colon to separate ID and quantity
+                productDetails.add(detail);
+            }
+
+            intent.putExtra("totalPrice", total);
+            intent.putStringArrayListExtra("productDetails", productDetails);
+            startActivity(intent);
         });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateTotal(); // Recalculate totals and update UI
+    }
 
-    private double calculateTotal(ArrayList<CartItem> itemList) {
+    private void updateTotal() {
         double total = 0;
-        for (CartItem item : itemList) {
-            total += item.getPrice() * item.getQuantity();
+        int totalItems = 0;
+        for (CartItem item : CartManager.getInstance().getCartItems()) {
+            total += item.getProduct().getPrice() * item.getQuantity();
+            totalItems += item.getQuantity();
         }
-        return total;
+        totalTextView.setText(String.format("Total: Rs. %,.0f", total));
+        totalItemsTextView.setText("Total Items: " + totalItems);
+        checkoutButton.setEnabled(totalItems > 0);
+    }
+
+    @Override
+    public void onCartUpdated() {
+        updateTotal();
     }
 }

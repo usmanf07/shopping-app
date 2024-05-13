@@ -8,68 +8,65 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class CartItemAdapter extends ArrayAdapter<CartItem> {
-
     private ArrayList<CartItem> cartItemList;
+    private CartInteractionListener listener;
 
-    public CartItemAdapter(Context context, ArrayList<CartItem> itemList) {
+    public CartItemAdapter(Context context, ArrayList<CartItem> itemList, CartInteractionListener listener) {
         super(context, 0, itemList);
         this.cartItemList = itemList;
+        this.listener = listener;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
-        final CartItem cartItem = getItem(position);
-
+        CartItem cartItem = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.cart_item, parent, false);
         }
 
-
         ImageView itemImageView = convertView.findViewById(R.id.itemImageView);
         TextView itemNameTextView = convertView.findViewById(R.id.itemNameTextView);
-        final TextView itemPriceTextView = convertView.findViewById(R.id.itemPriceTextView);
-        final TextView itemQuantityTextView = convertView.findViewById(R.id.itemQuantityTextView);
+        TextView itemPriceTextView = convertView.findViewById(R.id.itemPriceTextView);
+        TextView itemQuantityTextView = convertView.findViewById(R.id.itemQuantityTextView);
         Button plusButton = convertView.findViewById(R.id.button1);
         Button minusButton = convertView.findViewById(R.id.button2);
 
-
-        itemImageView.setImageResource(cartItem.getImageResource());
-        itemNameTextView.setText(cartItem.getName());
-        itemPriceTextView.setText("Price: $" + cartItem.getPrice());
+        if (cartItem.getProduct().getImage() != null) {
+            Picasso.get()
+                    .load(cartItem.getProduct().getImage())
+                    .into(itemImageView);
+        }
+        itemNameTextView.setText(cartItem.getProduct().getName());
+        itemPriceTextView.setText("Price: Rs. " + cartItem.getProduct().getPrice());
         itemQuantityTextView.setText("Quantity: " + cartItem.getQuantity());
 
+        plusButton.setOnClickListener(v -> {
+            cartItem.setQuantity(cartItem.getQuantity() + 1);
+            itemQuantityTextView.setText("Quantity: " + cartItem.getQuantity());
+            notifyDataSetChanged();
+            listener.onCartUpdated();
+        });
 
-        plusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int quantity = cartItem.getQuantity();
-                cartItem.setQuantity(quantity + 1);
+        minusButton.setOnClickListener(v -> {
+            int quantity = cartItem.getQuantity();
+            if (quantity > 1) {
+                cartItem.setQuantity(quantity - 1);
                 itemQuantityTextView.setText("Quantity: " + cartItem.getQuantity());
                 notifyDataSetChanged();
+                listener.onCartUpdated();
+            } else {
+                cartItemList.remove(position);
+                notifyDataSetChanged();
+                listener.onCartUpdated();
             }
         });
-
-        minusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int quantity = cartItem.getQuantity();
-                if (quantity > 0) {
-                    cartItem.setQuantity(quantity - 1);
-                    itemQuantityTextView.setText("Quantity: " + cartItem.getQuantity());
-                    notifyDataSetChanged();
-                }
-                if (cartItem.getQuantity() == 0) {
-                    cartItemList.remove(position);
-                    notifyDataSetChanged();
-                }
-            }
-        });
-
 
         return convertView;
     }

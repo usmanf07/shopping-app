@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -28,11 +30,21 @@ public class ProductActivity extends AppCompatActivity {
     private ProductAdapter productAdapter;
     private List<Product> productList;
     private DatabaseReference productsRef;
-
+    ImageView ivCart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
+
+        ivCart = findViewById(R.id.ivCart);
+        ivCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(ProductActivity.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         recyclerView = findViewById(R.id.recyclerViewProducts);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -61,6 +73,7 @@ public class ProductActivity extends AppCompatActivity {
                 for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
                     //Log.d("FirebaseData", "Product Snapshot: " + productSnapshot.getValue());
                     Product product = new Product();
+                    product.setId(productSnapshot.child("id").getValue(String.class));
                     product.setDescription(productSnapshot.child("description").getValue(String.class));
                     product.setFreedelivery(productSnapshot.child("freedelivery").getValue(Boolean.class));
                     product.setFullname(productSnapshot.child("fullname").getValue(String.class));
