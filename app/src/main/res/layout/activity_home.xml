@@ -81,8 +81,15 @@
             android:orientation="horizontal"/>
     </HorizontalScrollView>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/headings"
+        android:layout_below="@id/fScroll"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="180dp"
         android:id="@+id/head2"
         android:text="Flash Sale"
         android:textSize="25dp"
@@ -92,10 +99,22 @@
         android:layout_below="@id/fScroll"
         android:layout_height="wrap_content"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="14dp"
+        android:textSize="18dp"
+        android:id="@+id/viewAllProducts"
+        android:textStyle="bold"
+        android:textColor="@color/textColorMain"
+        android:text="view all products"
+        />
+</LinearLayout>
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/head2"
+        android:layout_below="@id/headings"
        >
 
         <androidx.recyclerview.widget.RecyclerView
