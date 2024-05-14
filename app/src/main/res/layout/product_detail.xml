@@ -5,7 +5,6 @@
     android:background="@color/cardview_light_background">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -171,8 +170,25 @@
 
                 </LinearLayout>
 
-            </LinearLayout>
+                <!-- Product Reviews -->
+                <LinearLayout
+                    android:id="@+id/reviews_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="@color/cardview_light_background">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textColorMain"
+                        android:text="Reviews"
+                        android:textSize="22sp"
+                        android:fontFamily="@font/barlow_bold"
+                        android:layout_marginBottom="8dp"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -201,6 +217,5 @@
             android:layout_height="wrap_content"
             android:text="Add to Cart"
             android:layout_margin="8dp"/>
-
     </LinearLayout>
 </RelativeLayout>
