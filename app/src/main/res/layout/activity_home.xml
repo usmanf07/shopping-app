@@ -54,13 +54,57 @@
         android:padding="12dp"
         android:textColor="@color/textColorMain" />
 
-    <Button
-        android:id="@+id/openProducts"
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/head1"
+        android:text="Categories"
+        android:textSize="25dp"
+        android:layout_margin="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/textColorMain"
+        android:layout_below="@id/editTextSearch"
+        android:layout_height="wrap_content"/>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/fScroll"
+
+        android:layout_height="wrap_content"
+        android:layout_below="@id/head1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/head1"
+            android:layout_margin="16dp"
+            android:orientation="horizontal"/>
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/head2"
+        android:text="Flash Sale"
+        android:textSize="25dp"
+        android:layout_margin="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/textColorMain"
+        android:layout_below="@id/fScroll"
+        android:layout_height="wrap_content"/>
+
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:text="temp to open product list" />
+        android:layout_below="@id/head2"
+       >
 
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/flashSaleRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/head2"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"/>
+    </HorizontalScrollView>
 
 </RelativeLayout>
