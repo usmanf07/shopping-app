@@ -139,9 +139,13 @@ public class ProductDetailActivity extends AppCompatActivity {
                     View reviewView = getLayoutInflater().inflate(R.layout.review_item, reviewsLayout, false);
                     TextView reviewerNameTextView = reviewView.findViewById(R.id.reviewer_name);
                     TextView reviewText = reviewView.findViewById(R.id.review_text);
+                    TextView reviewRating = reviewView.findViewById(R.id.review_rating);
+                    ImageView reviewRatingStar = reviewView.findViewById(R.id.review_rating_star);
 
+                    reviewRatingStar.setImageResource(R.drawable.star);
                     reviewerNameTextView.setText(reviewerName);
                     reviewText.setText(review.getReview());
+                    reviewRating.setText(String.format("%d/5", review.getRating()));
 
                     reviewsLayout.addView(reviewView);
                 }
