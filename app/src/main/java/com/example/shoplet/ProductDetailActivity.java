@@ -38,6 +38,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         TextView productName = findViewById(R.id.product_nameI);
         TextView productRating = findViewById(R.id.product_ratingI);
         TextView productPrice = findViewById(R.id.product_priceI);
+        TextView productDiscountedPrice = findViewById(R.id.product_discounted_priceI);
+        TextView productSpecifications = findViewById(R.id.product_specificationsI);
         Button buttonBuyNow = findViewById(R.id.button_buy_now);
         Button buttonAddToCart = findViewById(R.id.button_add_to_cart);
 
@@ -53,9 +55,27 @@ public class ProductDetailActivity extends AppCompatActivity {
                         .into(imageViewProduct);
             }
 
-            productName.setText(product.getName());
+            productName.setText(product.getFullname());
             productRating.setText(String.valueOf(product.getTotalrating() + "/5.0"));
-            productPrice.setText(String.format("Rs. %,.0f", (double)product.getPrice()));
+
+            if (product.isOnsale()) {
+                int discountedPrice = (int) (product.getPrice() - (product.getPrice() * product.getDiscount() / 100.0));
+                productPrice.setText(String.format("Rs. %,.0f", (double)product.getPrice()));
+                productPrice.setPaintFlags(productPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
+                productDiscountedPrice.setText(String.format("Rs. %,.0f", (double)discountedPrice));
+                productDiscountedPrice.setVisibility(View.VISIBLE);
+            } else {
+                productPrice.setText(String.format("Rs. %,.0f", (double)product.getPrice()));
+                productDiscountedPrice.setVisibility(View.GONE);
+            }
+
+            // Set product specifications
+            String[] specifications = product.getDescription().split(",");
+            StringBuilder specsBuilder = new StringBuilder();
+            for (String spec : specifications) {
+                specsBuilder.append(spec.trim()).append("\n");
+            }
+            productSpecifications.setText(specsBuilder.toString().trim());
         }
 
         // Button click listeners
@@ -79,7 +99,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         String detail = product.getId() + ":1:" + product.getName();
         productDetails.add(detail);
 
-        intent.putExtra("totalPrice", (double) product.getPrice());
+        double totalPrice = product.isOnsale() ?
+                product.getPrice() - (product.getPrice() * product.getDiscount() / 100.0) :
+                product.getPrice();
+
+        intent.putExtra("totalPrice", totalPrice);
         intent.putStringArrayListExtra("productDetails", productDetails);
         startActivity(intent);
     }

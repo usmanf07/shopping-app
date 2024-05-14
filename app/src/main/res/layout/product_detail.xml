@@ -42,147 +42,165 @@
             android:layout_marginRight="16dp"/>
     </LinearLayout>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_marginTop="80dp"
-    android:layout_height="match_parent">
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent"
+        android:layout_above="@id/button_layout"
+        android:layout_marginTop="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/btnbg"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-
-            <ImageView
-                android:id="@+id/imageViewProduct"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_margin="10dp"
-                android:layout_gravity="center"
-                android:src="@drawable/phone"
-                android:scaleType="centerCrop" />
-
-            <!-- Product Information -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="8dp"
-                android:background="@color/cardview_light_background">
+                android:background="@color/btnbg"
+                android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/product_nameI"
+                <ImageView
+                    android:id="@+id/imageViewProduct"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textColorMain"
-                    android:text="Iphone 15 pro - 256 GB"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:padding="8dp"/>
+                    android:layout_height="400dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/phone"
+                    android:scaleType="centerCrop" />
 
-                <!-- Product Rating -->
+                <!-- Product Information -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:src="@drawable/star"
-                        android:layout_gravity="center_vertical" />
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="@color/cardview_light_background">
 
                     <TextView
-                        android:id="@+id/product_ratingI"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/product_nameI"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="4.1/5"
-                        android:textStyle="bold"
-                        android:textSize="18dp"
                         android:textColor="@color/textColorMain"
-                        android:layout_marginStart="8dp"/>
+                        android:text="Iphone 15 pro - 256 GB"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:padding="8dp"/>
+
+                    <!-- Product Rating -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:src="@drawable/star"
+                            android:layout_gravity="center_vertical" />
+
+                        <TextView
+                            android:id="@+id/product_ratingI"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4.1/5"
+                            android:textStyle="bold"
+                            android:textSize="18dp"
+                            android:textColor="@color/textColorMain"
+                            android:layout_marginStart="8dp"/>
+
+                    </LinearLayout>
+
+                    <!-- Product Prices -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/product_priceI"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18dp"
+                            android:text="Rs 340,000"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorMain"
+                            android:padding="8dp"/>
+
+                        <TextView
+                            android:id="@+id/product_discounted_priceI"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18dp"
+                            android:text="Rs 299,999"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:padding="8dp"
+                            android:visibility="gone"
+                            android:layout_marginStart="16dp"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <!-- Product Price -->
-                <TextView
-                    android:id="@+id/product_priceI"
+                <!-- Product Specifications -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18dp"
-                    android:text="Rs 340,000"
-                    android:textStyle="bold"
-                    android:textColor="@color/btnPrimaryClk"
-                    android:padding="8dp"/>
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="@color/cardview_light_background">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textColorMain"
+                        android:text="Specifications"
+                        android:textSize="22sp"
+                        android:fontFamily="@font/barlow_bold"
+                        android:layout_marginBottom="8dp"/>
 
-            <!-- Product Specifications -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp"
-                android:background="@color/cardview_light_background">
+                    <TextView
+                        android:id="@+id/product_specificationsI"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textColorMain"
+                        android:fontFamily="@font/barlow_medium"
+                        android:textSize="18sp"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textColorMain"
-                    android:text="Specifications"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textColorMain"
-                    android:text="Specification 1: Value 1\nSpecification 2: Value 2\nSpecification 3: Value 3\nSpecification 4: Value 4"
-                    android:textSize="16sp"/>
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
+    </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
 
+        <Button
+            android:id="@+id/button_buy_now"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@color/btnPrimary"
+            android:layout_height="wrap_content"
+            android:text="Buy Now"
+            android:layout_margin="8dp"/>
+
+        <Button
+            android:id="@+id/button_add_to_cart"
+            android:layout_width="0dp"
+            android:background="@color/btnPrimaryClk"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Add to Cart"
+            android:layout_margin="8dp"/>
 
     </LinearLayout>
-</ScrollView>
-<LinearLayout
-android:id="@+id/button_layout"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-android:orientation="horizontal"
-android:layout_alignParentBottom="true">
-
-<Button
-    android:id="@+id/button_buy_now"
-    android:layout_width="0dp"
-    android:layout_weight="1"
-    android:background="@color/btnPrimary"
-    android:layout_height="wrap_content"
-    android:text="Buy Now"
-    android:layout_margin="8dp"/>
-
-<Button
-    android:id="@+id/button_add_to_cart"
-    android:layout_width="0dp"
-    android:background="@color/btnPrimaryClk"
-    android:layout_weight="1"
-    android:layout_height="wrap_content"
-    android:text="Add to Cart"
-    android:layout_margin="8dp"/>
-
-</LinearLayout>
 </RelativeLayout>

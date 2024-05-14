@@ -22,4 +22,5 @@
     <color name="searchBg">#C4C4C4</color>
 
     <color name="checked">#4CAF50</color>
+    <color name="cardBg">#DFDFDF</color>
 </resources>

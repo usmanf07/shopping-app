@@ -29,19 +29,22 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.widget.TextView;
 
 public class ProductActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ProductAdapter productAdapter;
     private List<Product> productList;
-    private List<Product> filteredProductList; // List to hold filtered products
+    private List<Product> filteredProductList;
     private DatabaseReference productsRef;
     private ProgressBar progressBar;
     private ImageView ivCart;
     private EditText editTextSearch;
     private Button btnSort, btnOnSale, btnFreeDel;
     private boolean isPriceAscending = true;
+    private String categoryID;
+    private TextView tvNoProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class ProductActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         progressBar = findViewById(R.id.progressBar);
+        tvNoProducts = findViewById(R.id.tvNoProducts);
 
         productList = new ArrayList<>();
         filteredProductList = new ArrayList<>();
@@ -79,6 +83,8 @@ public class ProductActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(productAdapter);
 
+        categoryID = getIntent().getStringExtra("categoryID");
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         productsRef = database.getReference("Products");
 
@@ -89,7 +95,6 @@ public class ProductActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 productList.clear();
                 for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
-                    // Log.d("FirebaseData", "Product Snapshot: " + productSnapshot.getValue());
                     Product product = new Product();
                     product.setId(productSnapshot.child("id").getValue(String.class));
                     product.setDescription(productSnapshot.child("description").getValue(String.class));
@@ -99,23 +104,33 @@ public class ProductActivity extends AppCompatActivity {
                     product.setOnsale(productSnapshot.child("onsale").getValue(Boolean.class));
                     product.setPrice(productSnapshot.child("price").getValue(Integer.class));
                     product.setImage(productSnapshot.child("image").getValue(String.class));
+                    product.setDiscount(productSnapshot.child("discount").getValue(Integer.class));
                     Map<String, Rating> ratings = new HashMap<>();
                     for (DataSnapshot ratingSnapshot : productSnapshot.child("ratings").getChildren()) {
                         ratings.put(ratingSnapshot.getKey(), ratingSnapshot.getValue(Rating.class));
                     }
                     product.setRatings(ratings);
-                    product.setSales(productSnapshot.child("sales").getValue(Integer.class));
-                    product.setStock(productSnapshot.child("stock").getValue(Integer.class));
+
                     product.setCategoryID(productSnapshot.child("categoryID").getValue(String.class));
                     product.setTotalrating(productSnapshot.child("totalrating").getValue(Double.class));
 
-                    productList.add(product);
+                    if (categoryID != null && categoryID.equals(product.getCategoryID())) {
+                        productList.add(product);
+                    }
                 }
 
                 filteredProductList.clear();
                 filteredProductList.addAll(productList);
                 productAdapter.notifyDataSetChanged();
-                // Hide progress bar when data is loaded
+
+                if (filteredProductList.isEmpty()) {
+                    tvNoProducts.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    tvNoProducts.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -123,16 +138,13 @@ public class ProductActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("FirebaseData", "Failed to retrieve products: " + databaseError.getMessage(), databaseError.toException());
                 Toast.makeText(ProductActivity.this, "Failed to retrieve products: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                // Hide progress bar on error
                 progressBar.setVisibility(View.GONE);
             }
         });
 
-        // Set up search functionality
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -142,11 +154,9 @@ public class ProductActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
-        // Set up button click listeners
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,6 +191,7 @@ public class ProductActivity extends AppCompatActivity {
             }
         }
         productAdapter.notifyDataSetChanged();
+        toggleNoProductsMessage();
     }
 
     private void sortProductsByPrice() {
@@ -201,6 +212,7 @@ public class ProductActivity extends AppCompatActivity {
         }
         isPriceAscending = !isPriceAscending;
         productAdapter.notifyDataSetChanged();
+        toggleNoProductsMessage();
     }
 
     private void filterOnSaleProducts() {
@@ -211,6 +223,7 @@ public class ProductActivity extends AppCompatActivity {
             }
         }
         productAdapter.notifyDataSetChanged();
+        toggleNoProductsMessage();
     }
 
     private void filterFreeDeliveryProducts() {
@@ -221,5 +234,16 @@ public class ProductActivity extends AppCompatActivity {
             }
         }
         productAdapter.notifyDataSetChanged();
+        toggleNoProductsMessage();
+    }
+
+    private void toggleNoProductsMessage() {
+        if (filteredProductList.isEmpty()) {
+            tvNoProducts.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            tvNoProducts.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }

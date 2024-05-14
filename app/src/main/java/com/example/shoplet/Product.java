@@ -13,9 +13,8 @@ public class Product implements Serializable{
     private String name;
     private boolean onsale;
     private int price;
+    private int discount;
     private Map<String, Rating> ratings;
-    private int sales;
-    private int stock;
     private String categoryID;
     private double totalrating;
 
@@ -23,9 +22,10 @@ public class Product implements Serializable{
         // Default constructor required for Firebase
     }
 
-    public Product(String id, String image, String description, boolean freedelivery, String fullname, String name, boolean onsale,
-                   int price, Map<String, Rating> ratings, int sales, int stock, String categoryID, double totalrating) {
+    public Product(int discount, String id, String image, String description, boolean freedelivery, String fullname, String name, boolean onsale,
+                   int price, Map<String, Rating> ratings, String categoryID, double totalrating) {
         this.id = id;
+        this.discount = discount;
         this.image = image;
         this.description = description;
         this.freedelivery = freedelivery;
@@ -34,10 +34,17 @@ public class Product implements Serializable{
         this.onsale = onsale;
         this.price = price;
         this.ratings = ratings;
-        this.sales = sales;
-        this.stock = stock;
+
         this.categoryID = categoryID;
         this.totalrating = totalrating;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
     }
 
     public String getId() {
@@ -110,22 +117,6 @@ public class Product implements Serializable{
 
     public void setRatings(Map<String, Rating> ratings) {
         this.ratings = ratings;
-    }
-
-    public int getSales() {
-        return sales;
-    }
-
-    public void setSales(int sales) {
-        this.sales = sales;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
     }
 
     public String getCategoryID() {

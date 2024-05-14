@@ -44,7 +44,15 @@ public class CartItemAdapter extends ArrayAdapter<CartItem> {
                     .into(itemImageView);
         }
         itemNameTextView.setText(cartItem.getProduct().getName());
-        itemPriceTextView.setText("Price: Rs. " + cartItem.getProduct().getPrice());
+
+        // Calculate and display the price
+        if (cartItem.getProduct().isOnsale()) {
+            int discountedPrice = (int) (cartItem.getProduct().getPrice() - (cartItem.getProduct().getPrice() * cartItem.getProduct().getDiscount() / 100.0));
+            itemPriceTextView.setText("Discounted Price: Rs. " + discountedPrice + " (Original: Rs. " + cartItem.getProduct().getPrice() + ")");
+        } else {
+            itemPriceTextView.setText("Price: Rs. " + cartItem.getProduct().getPrice());
+        }
+
         itemQuantityTextView.setText("Quantity: " + cartItem.getQuantity());
 
         plusButton.setOnClickListener(v -> {

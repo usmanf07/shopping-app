@@ -73,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
 
         loadPreferences();
 
-        // Set click listener for login button
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Set click listener for forgot password text
+
         tvForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Set click listener for sign up text
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,11 +97,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleLogin() {
-        // Get email and password input
+
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        // Validate input
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Email is required");
             return;
@@ -114,23 +111,21 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Show progress bar while logging in
         progressBar.setVisibility(View.VISIBLE);
 
-        // Sign in with Firebase
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(Task<AuthResult> task) {
-                        // Hide progress bar
+
                         progressBar.setVisibility(View.GONE);
 
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             if (firebaseUser != null) {
-                                Log.d(TAG, "User UID: " + firebaseUser.getUid()); // Log UID
+                                Log.d(TAG, "User UID: " + firebaseUser.getUid());
                                 if (cbRememberMe.isChecked()) {
                                     savePreferences(email, password);
                                 } else {
@@ -141,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.w(TAG, "User is null");
                             }
                         } else {
-                            // If sign in fails, display a message to the user.
+
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();

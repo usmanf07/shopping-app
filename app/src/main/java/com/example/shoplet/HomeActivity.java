@@ -5,54 +5,50 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import androidx.annotation.NonNull;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import androidx.recyclerview.widget.GridLayoutManager;
+
 
 public class HomeActivity extends AppCompatActivity {
     private ImageView ivCart;
     private ImageView ivProfile;
     private RecyclerView categoryRecyclerView;
-    private RecyclerView flashSaleRecyclerView;
-
     private CategoryAdapter categoryAdapter;
-    private FlashSaleAdapter flashSaleAdapter;
+    private List<CategoryItem> categoryItems;
+    private TextView viewAllProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+//        viewAllProducts = findViewById(R.id.viewAllProducts);
+//        viewAllProducts.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(HomeActivity.this, ProductActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
         categoryRecyclerView = findViewById(R.id.categoryRecyclerView);
-        categoryRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        categoryRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        flashSaleRecyclerView = findViewById(R.id.flashSaleRecyclerView);
-        flashSaleRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        List<CategoryItem> categoryItems = new ArrayList<>();
-        categoryItems.add(new CategoryItem("c0001", "Phones"));
-        categoryItems.add(new CategoryItem("c0002", "Pets"));
-        categoryItems.add(new CategoryItem("c0003", "Laptops"));
-        categoryItems.add(new CategoryItem("c0004", "Books"));
-        categoryItems.add(new CategoryItem("c0005", "Home Appliances"));
-        categoryItems.add(new CategoryItem("c0006", "Fitness"));
-        categoryItems.add(new CategoryItem("c0007", "Fashion"));
-        categoryItems.add(new CategoryItem("c0008", "Beauty Products"));
-        categoryItems.add(new CategoryItem("c0009", "Electronics"));
-        categoryItems.add(new CategoryItem("c0010", "Furniture"));
-
-        List<FlashSaleItem> flashSaleItems = new ArrayList<>();
-        flashSaleItems.add(new FlashSaleItem(R.drawable.phone, "Iphone 15 pro - 256 GB", "4.1/5", "Rs 340,000"));
-        flashSaleItems.add(new FlashSaleItem(R.drawable.phone, "Samsung Galaxy S22 Ultra - 512 GB", "4.5/5", "Rs 300,000"));
-        flashSaleItems.add(new FlashSaleItem(R.drawable.phone, "Google Pixel 7 Pro - 128 GB", "4.3/5", "Rs 250,000"));
-        flashSaleItems.add(new FlashSaleItem(R.drawable.phone, "OnePlus 10 - 256 GB", "4.2/5", "Rs 280,000"));
-
+        categoryItems = new ArrayList<>();
         categoryAdapter = new CategoryAdapter(this, categoryItems);
         categoryRecyclerView.setAdapter(categoryAdapter);
 
-        flashSaleAdapter = new FlashSaleAdapter(this, flashSaleItems);
-        flashSaleRecyclerView.setAdapter(flashSaleAdapter);
+        fetchCategoriesFromFirebase();
 
         ivCart = findViewById(R.id.ivCart);
         ivCart.setOnClickListener(new View.OnClickListener() {
@@ -73,8 +69,23 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void openProductActivity() {
-        Intent intent = new Intent(this, ProductActivity.class);
-        startActivity(intent);
+    private void fetchCategoriesFromFirebase() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Categories");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                categoryItems.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CategoryItem categoryItem = dataSnapshot.getValue(CategoryItem.class);
+                    categoryItems.add(categoryItem);
+                }
+                categoryAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle possible errors.
+            }
+        });
     }
 }

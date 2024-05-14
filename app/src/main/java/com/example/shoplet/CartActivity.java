@@ -3,23 +3,28 @@ package com.example.shoplet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class CartActivity extends AppCompatActivity implements CartInteractionListener{
+public class CartActivity extends AppCompatActivity implements CartInteractionListener {
     private ListView cartListView;
     private TextView totalTextView, totalItemsTextView;
     private Button checkoutButton;
     private CartItemAdapter adapter;
+
+    ImageView ivClear;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart);
 
+        ivClear = findViewById(R.id.ivClear);
         cartListView = findViewById(R.id.cartListView);
         totalTextView = findViewById(R.id.tvTotalPrice);
         checkoutButton = findViewById(R.id.btnCheckout);
@@ -32,13 +37,22 @@ public class CartActivity extends AppCompatActivity implements CartInteractionLi
         // Initially update the total amount
         updateTotal();
 
+
+        ivClear.setOnClickListener(view -> {
+            CartManager.getInstance().clearCart();
+            adapter.notifyDataSetChanged();
+            updateTotal();
+        });
         checkoutButton.setOnClickListener(view -> {
             Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
             double total = 0;
             ArrayList<String> productDetails = new ArrayList<>();
             for (CartItem item : CartManager.getInstance().getCartItems()) {
-                total += item.getProduct().getPrice() * item.getQuantity();
-                String detail = item.getProduct().getId() + ":" + item.getQuantity() + ":" + item.getProduct().getName(); // Use colon to separate ID and quantity
+                double price = item.getProduct().isOnsale() ?
+                        item.getProduct().getPrice() - (item.getProduct().getPrice() * item.getProduct().getDiscount() / 100.0) :
+                        item.getProduct().getPrice();
+                total += price * item.getQuantity();
+                String detail = item.getProduct().getId() + ":" + item.getQuantity() + ":" + item.getProduct().getName();
                 productDetails.add(detail);
             }
 
@@ -47,6 +61,7 @@ public class CartActivity extends AppCompatActivity implements CartInteractionLi
             startActivity(intent);
         });
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -57,7 +72,10 @@ public class CartActivity extends AppCompatActivity implements CartInteractionLi
         double total = 0;
         int totalItems = 0;
         for (CartItem item : CartManager.getInstance().getCartItems()) {
-            total += item.getProduct().getPrice() * item.getQuantity();
+            double price = item.getProduct().isOnsale() ?
+                    item.getProduct().getPrice() - (item.getProduct().getPrice() * item.getProduct().getDiscount() / 100.0) :
+                    item.getProduct().getPrice();
+            total += price * item.getQuantity();
             totalItems += item.getQuantity();
         }
         totalTextView.setText(String.format("Total: Rs. %,.0f", total));
