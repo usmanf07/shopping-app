@@ -2,4 +2,6 @@
     <string name="app_name">Shoplet</string>
     <string name="welcome_title">Welcome To Shoplet!</string>
     <string name="welcome_sub_title">Get Everything You Need in Your Life</string>
+
+    <string name="banner_ad_unit_id">/6499/example/adaptive-banner</string>
 </resources>
