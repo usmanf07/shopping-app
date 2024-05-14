@@ -34,6 +34,8 @@ android {
 
 dependencies {
 
+    implementation("com.sun.mail:jakarta.mail:2.0.1")
+    implementation("com.sun.activation:jakarta.activation:2.0.1")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.squareup.picasso:picasso:2.8")
     implementation("androidx.appcompat:appcompat:1.6.1")
