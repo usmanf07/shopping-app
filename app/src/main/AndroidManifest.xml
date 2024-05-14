@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,7 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat"
         tools:targetApi="31">
+        <activity
+            android:name=".ResponseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentActivity"
+            android:exported="false" />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8113693260092333~5870580560" />
+        <meta-data
+            android:name="com.google.firebase.database.DatabasePersistenceEnabled"
+            android:value="true" />
 
         <activity
             android:name=".MyOrdersActivity"
@@ -47,7 +61,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

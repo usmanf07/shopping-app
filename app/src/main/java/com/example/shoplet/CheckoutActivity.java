@@ -41,6 +41,8 @@ public class CheckoutActivity extends AppCompatActivity {
     private TextView userPhoneTextView;
 
     private User user;
+    private double totalPrice;
+    private ArrayList<String> productDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public class CheckoutActivity extends AppCompatActivity {
             // Set user details in the TextViews
             usernameTextView.setText(user.getName());
             userAddressTextView.setText(user.getAddress());
-            userPhoneTextView.setText(String.valueOf(user.getPhone()));
+            userPhoneTextView.setText(String.valueOf(user.getPhone())); // Convert long to String
         }
 
         handleIntent();
@@ -73,11 +75,11 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void handleIntent() {
         Intent intent = getIntent();
-        double totalPrice = intent.getDoubleExtra("totalPrice", 0);
+        totalPrice = intent.getDoubleExtra("totalPrice", 0);
         totalPriceTextView.setText(String.format("Total: Rs. %,.0f", totalPrice));
 
         TextView textViewItemsList = findViewById(R.id.textViewItemsList);
-        ArrayList<String> productDetails = intent.getStringArrayListExtra("productDetails");
+        productDetails = intent.getStringArrayListExtra("productDetails");
         if (productDetails != null) {
             StringBuilder itemsText = new StringBuilder();
             for (String detail : productDetails) {
@@ -104,9 +106,16 @@ public class CheckoutActivity extends AppCompatActivity {
                 placeOrder(paymentMethod);
             } else if (selectedId == R.id.radioCreditCard) {
                 paymentMethod = "Credit Card";
-                // Implement Credit Card payment functionality
+                makeJazzCashPayment();
             }
         });
+    }
+
+    private void makeJazzCashPayment() {
+        double totalPrice = getIntent().getDoubleExtra("totalPrice", 0);
+        Intent intent = new Intent(CheckoutActivity.this, PaymentActivity.class);
+        intent.putExtra("price", String.valueOf(totalPrice));
+        startActivityForResult(intent, 0);
     }
 
     private void placeOrder(String paymentMethod) {
@@ -114,8 +123,6 @@ public class CheckoutActivity extends AppCompatActivity {
             Toast.makeText(this, "User not found. Please log in again.", Toast.LENGTH_SHORT).show();
             return;
         }
-        double totalPrice = getIntent().getDoubleExtra("totalPrice", 0);
-        ArrayList<String> productDetails = getIntent().getStringArrayListExtra("productDetails");
 
         Calendar calendar = Calendar.getInstance();
 
@@ -206,5 +213,18 @@ public class CheckoutActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }, 3000); // Assuming the GIF and slide animation take about 3 seconds
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            String responseCode = data.getStringExtra("pp_ResponseCode");
+            if (responseCode.equals("000")) {
+                Toast.makeText(getApplicationContext(), "Payment Success", Toast.LENGTH_SHORT).show();
+                placeOrder("JazzCash");
+            } else {
+                Toast.makeText(getApplicationContext(), "Payment Failed", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
