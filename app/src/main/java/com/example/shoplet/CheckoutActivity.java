@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
+
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -34,6 +35,13 @@ public class CheckoutActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private ImageView imageViewCheckGif;
     private DatabaseReference databaseReference;
+
+    private TextView usernameTextView;
+    private TextView userAddressTextView;
+    private TextView userPhoneTextView;
+
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +51,45 @@ public class CheckoutActivity extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference("Orders");
 
         totalPriceTextView = findViewById(R.id.tvTotalPrice);
+        usernameTextView = findViewById(R.id.username);
+        userAddressTextView = findViewById(R.id.useraddress);
+        userPhoneTextView = findViewById(R.id.userphone);
+
+        imageViewCheckGif = findViewById(R.id.imageViewCheckGif);
+
+        // Retrieve the current user details
+        user = CurrentUser.getInstance().getUser();
+
+        if (user != null) {
+            // Set user details in the TextViews
+            usernameTextView.setText(user.getName());
+            userAddressTextView.setText(user.getAddress());
+            userPhoneTextView.setText(String.valueOf(user.getPhone()));
+        }
+
         handleIntent();
         setupPlaceOrderButton();
-        imageViewCheckGif = findViewById(R.id.imageViewCheckGif);
+    }
+
+    private void handleIntent() {
+        Intent intent = getIntent();
+        double totalPrice = intent.getDoubleExtra("totalPrice", 0);
+        totalPriceTextView.setText(String.format("Total: Rs. %,.0f", totalPrice));
+
+        TextView textViewItemsList = findViewById(R.id.textViewItemsList);
+        ArrayList<String> productDetails = intent.getStringArrayListExtra("productDetails");
+        if (productDetails != null) {
+            StringBuilder itemsText = new StringBuilder();
+            for (String detail : productDetails) {
+                String[] parts = detail.split(":");
+                if (parts.length == 3) {
+                    int quantity = Integer.parseInt(parts[1]);
+                    String productName = parts[2];
+                    itemsText.append(productName).append("    x ").append(quantity).append(")\n");
+                }
+            }
+            textViewItemsList.setText(itemsText.toString());
+        }
     }
 
     private void setupPlaceOrderButton() {
@@ -77,7 +121,7 @@ public class CheckoutActivity extends AppCompatActivity {
         String currentDate = dateFormat.format(calendar.getTime());
         String currentTime = timeFormat.format(calendar.getTime());
 
-        String userId = "u0001"; // Get this from your user management system
+        String userId = user.getId(); // Get this from your user object
         DatabaseReference orderRef = databaseReference.push(); // Create a unique key for the order
 
         HashMap<String, Object> order = new HashMap<>();
@@ -118,7 +162,6 @@ public class CheckoutActivity extends AppCompatActivity {
                 });
     }
 
-
     private void loadAndAnimateGif() {
         Glide.with(this)
                 .load(R.drawable.orderplaced) // Replace with your GIF resource or URL
@@ -131,6 +174,7 @@ public class CheckoutActivity extends AppCompatActivity {
                     }
                 });
     }
+
     private void startAnimation() {
         Animation slideUpAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_up);
         imageViewCheckGif.startAnimation(slideUpAnimation);
@@ -141,27 +185,5 @@ public class CheckoutActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }, 3000); // Assuming the GIF and slide animation take about 3 seconds
-    }
-
-    private void handleIntent() {
-        Intent intent = getIntent();
-        double totalPrice = intent.getDoubleExtra("totalPrice", 0);
-
-        totalPriceTextView.setText(String.format("Total: Rs. %,.0f", totalPrice));
-
-        TextView textViewItemsList = findViewById(R.id.textViewItemsList);
-        ArrayList<String> productDetails = getIntent().getStringArrayListExtra("productDetails");
-        if (productDetails != null) {
-            StringBuilder itemsText = new StringBuilder();
-            for (String detail : productDetails) {
-                String[] parts = detail.split(":");
-                if (parts.length == 3) {;
-                    int quantity = Integer.parseInt(parts[1]);
-                    String productName = parts[2];
-                    itemsText.append(productName).append("    x ").append(quantity).append(")\n");
-                }
-            }
-            textViewItemsList.setText(itemsText.toString());
-        }
     }
 }
