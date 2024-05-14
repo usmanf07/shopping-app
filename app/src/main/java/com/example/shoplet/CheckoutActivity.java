@@ -110,6 +110,10 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void placeOrder(String paymentMethod) {
+        if (user == null) {
+            Toast.makeText(this, "User not found. Please log in again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         double totalPrice = getIntent().getDoubleExtra("totalPrice", 0);
         ArrayList<String> productDetails = getIntent().getStringArrayListExtra("productDetails");
 
@@ -121,8 +125,8 @@ public class CheckoutActivity extends AppCompatActivity {
         String currentDate = dateFormat.format(calendar.getTime());
         String currentTime = timeFormat.format(calendar.getTime());
 
-        String userId = user.getId(); // Get this from your user object
-        DatabaseReference orderRef = databaseReference.push(); // Create a unique key for the order
+        String userId = user.getId();
+        DatabaseReference orderRef = databaseReference.push();
 
         HashMap<String, Object> order = new HashMap<>();
         order.put("id", orderRef.getKey());
@@ -133,17 +137,28 @@ public class CheckoutActivity extends AppCompatActivity {
         order.put("time", currentTime);
         order.put("status", "In Progress");
         HashMap<String, Object> products = new HashMap<>();
+        StringBuilder emailContent = new StringBuilder();
+        emailContent.append("Order Details:\n\n");
+        emailContent.append("Order ID: ").append(orderRef.getKey()).append("\n");
+        emailContent.append("Name: ").append(user.getName()).append("\n");
+        emailContent.append("Address: ").append(user.getAddress()).append("\n");
+        emailContent.append("Phone: ").append(user.getPhone()).append("\n");
+        emailContent.append("Email: ").append(user.getEmail()).append("\n\n");
+        emailContent.append("Products:\n");
+
         if (productDetails != null) {
             for (String detail : productDetails) {
                 String[] parts = detail.split(":");
                 String productId = parts[0];
                 int quantity = Integer.parseInt(parts[1]);
+                String productName = parts[2];
 
                 HashMap<String, Object> product = new HashMap<>();
                 product.put("id", productId);
                 product.put("quantity", quantity);
 
                 products.put(productId, product);
+                emailContent.append(productName).append("    x ").append(quantity).append("\n");
             }
         }
 
@@ -155,6 +170,12 @@ public class CheckoutActivity extends AppCompatActivity {
                     Toast.makeText(CheckoutActivity.this, "Order placed successfully", Toast.LENGTH_SHORT).show();
                     loadAndAnimateGif();
                     CartManager.getInstance().clearCart();
+
+                    // Send email to the user
+                    emailContent.append("\nTotal: Rs. ").append(totalPrice).append("\n");
+                    emailContent.append("Payment Method: ").append(paymentMethod).append("\n");
+                    new EmailSender(user.getEmail(), "Thanks for Order!", emailContent.toString()).execute();
+
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure

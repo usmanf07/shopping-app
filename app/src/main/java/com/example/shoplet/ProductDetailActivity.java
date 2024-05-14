@@ -12,10 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
-    ImageView ivCart;
+    private ImageView ivCart;
+    private Product product;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +28,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         ivCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(ProductDetailActivity.this, CartActivity.class);
                 startActivity(intent);
             }
@@ -42,35 +44,43 @@ public class ProductDetailActivity extends AppCompatActivity {
         // Retrieve product data from intent
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("product")) {
-            Product product = (Product) intent.getSerializableExtra("product");
+            product = (Product) intent.getSerializableExtra("product");
 
             // Set product details to views
-            // Assuming you don't have an image resource ID in your Product model
-            // imageViewProduct.setImageResource(product.getImageResId());
             if (product.getImage() != null) {
                 Picasso.get()
                         .load(product.getImage())
                         .into(imageViewProduct);
             }
-            // Set other product details
-            productName.setText(product.getName());
-            productRating.setText(String.valueOf(product.getTotalrating())); // Assuming you want to display total rating
-            productPrice.setText(String.valueOf(product.getPrice()));
 
-            // You can set other product details here if needed
+            productName.setText(product.getName());
+            productRating.setText(String.valueOf(product.getTotalrating() + "/5.0"));
+            productPrice.setText(String.format("Rs. %,.0f", (double)product.getPrice()));
         }
 
         // Button click listeners
         buttonBuyNow.setOnClickListener(view -> {
-            // Handle Buy Now button click
+            if (product != null) {
+                buyNow(product);
+            }
         });
 
         buttonAddToCart.setOnClickListener(view -> {
-            if (intent != null && intent.hasExtra("product")) {
-                Product product = (Product) intent.getSerializableExtra("product");
+            if (product != null) {
                 CartManager.getInstance().addToCart(product);
                 Toast.makeText(ProductDetailActivity.this, "Added to cart", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void buyNow(Product product) {
+        Intent intent = new Intent(ProductDetailActivity.this, CheckoutActivity.class);
+        ArrayList<String> productDetails = new ArrayList<>();
+        String detail = product.getId() + ":1:" + product.getName();
+        productDetails.add(detail);
+
+        intent.putExtra("totalPrice", (double) product.getPrice());
+        intent.putStringArrayListExtra("productDetails", productDetails);
+        startActivity(intent);
     }
 }

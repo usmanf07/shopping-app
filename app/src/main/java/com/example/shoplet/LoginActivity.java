@@ -1,8 +1,10 @@
 package com.example.shoplet;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox cbRememberMe;
     private Button btnLogin;
     private TextView tvForgotPassword, tvSignUp;
+    private ProgressBar progressBar;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private FirebaseAuth mAuth;
@@ -62,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignUp = findViewById(R.id.tvSignUp);
+        progressBar = findViewById(R.id.progressBar);
 
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -109,11 +114,17 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // Show progress bar while logging in
+        progressBar.setVisibility(View.VISIBLE);
+
         // Sign in with Firebase
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(Task<AuthResult> task) {
+                        // Hide progress bar
+                        progressBar.setVisibility(View.GONE);
+
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
@@ -140,15 +151,47 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleForgotPassword() {
-        // Handle forgot password action
-        Toast.makeText(this, "Forgot Password Clicked", Toast.LENGTH_SHORT).show();
-        // startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+        EditText resetMail = new EditText(this);
+        AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(this);
+        passwordResetDialog.setTitle("Reset Password");
+        passwordResetDialog.setMessage("Enter your email to receive reset link:");
+        passwordResetDialog.setView(resetMail);
+
+        passwordResetDialog.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String mail = resetMail.getText().toString();
+                if (TextUtils.isEmpty(mail)) {
+                    Toast.makeText(LoginActivity.this, "Email is required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                mAuth.sendPasswordResetEmail(mail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Reset link sent to your email", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Error! Reset link is not sent", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        passwordResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Close the dialog
+                dialog.dismiss();
+            }
+        });
+
+        passwordResetDialog.create().show();
     }
 
     private void handleSignUp() {
-        // Handle sign up action
-        Toast.makeText(this, "Sign Up Clicked", Toast.LENGTH_SHORT).show();
-        // startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+        startActivity(new Intent(LoginActivity.this, SignupActivity.class));
     }
 
     private void savePreferences(String email, String password) {

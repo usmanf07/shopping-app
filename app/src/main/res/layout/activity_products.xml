@@ -65,7 +65,7 @@
         android:layout_marginEnd="16dp">
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/btnSort"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -80,21 +80,7 @@
             android:layout_marginEnd="4dp" />
 
         <Button
-            android:id="@+id/button2"
-            android:layout_width="0dp"
-            android:textSize="10dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="@color/btnbg"
-            android:text="Brand"
-            android:textColor="@color/textColorMain"
-            android:drawablePadding="4dp"
-            android:gravity="center"
-            android:padding="8dp"
-            android:layout_marginEnd="4dp" />
-
-        <Button
-            android:id="@+id/button3"
+            android:id="@+id/btnOnSale"
             android:layout_width="0dp"
             android:textSize="10dp"
             android:layout_height="40dp"
@@ -109,11 +95,11 @@
             android:layout_marginEnd="4dp" /> <!-- Add margin between each button -->
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/btnFreeDel"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:text="Free"
+            android:text="Free Delivery"
             android:textColor="@color/textColorMain"
             android:background="@color/btnbg"
             android:drawableLeft="@drawable/truck"
@@ -132,5 +118,12 @@
         android:layout_height="match_parent"
         android:layout_below="@id/buttonRow"
         android:layout_marginTop="16dp"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>
