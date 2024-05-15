@@ -133,6 +133,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp">
         <RadioButton
+            android:id="@+id/radioCashOnDelivery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColorMain"
+            android:text="Cash on Delivery"
+            android:button="@android:drawable/btn_radio"/>
+
+        <RadioButton
             android:id="@+id/radioCreditCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -141,12 +149,13 @@
             android:button="@android:drawable/btn_radio"/>
 
         <RadioButton
-            android:id="@+id/radioCashOnDelivery"
+            android:id="@+id/radioJazzCash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/textColorMain"
-            android:text="Cash on Delivery"
+            android:text="Jazz Cash"
             android:button="@android:drawable/btn_radio"/>
+
     </RadioGroup>
 
     <TextView

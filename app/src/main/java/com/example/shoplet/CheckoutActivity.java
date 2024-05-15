@@ -3,6 +3,9 @@ package com.example.shoplet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 
 import android.content.Intent;
@@ -23,11 +26,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.paymentsheet.PaymentSheet;
+import com.stripe.android.paymentsheet.PaymentSheetResult;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class CheckoutActivity extends AppCompatActivity {
 
@@ -44,10 +61,19 @@ public class CheckoutActivity extends AppCompatActivity {
     private double totalPrice;
     private ArrayList<String> productDetails;
 
+    private PaymentSheet paymentSheet;
+    private PaymentSheet.Configuration paymentSheetConfiguration;
+    private String paymentIntentClientSecret;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
+
+        PaymentConfiguration.init(
+                getApplicationContext(),
+                "pk_test_51PGdR6P1pmJbill8ushP5HyD7RLhVAMTzla7WCXYjPJoqVyUSgQGOpbpi8ck3ljJvF6NrR1oZYzVnEnjxxIclq1O0021JW6BZQ"
+        );
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
@@ -59,15 +85,16 @@ public class CheckoutActivity extends AppCompatActivity {
 
         imageViewCheckGif = findViewById(R.id.imageViewCheckGif);
 
-        // Retrieve the current user details
         user = CurrentUser.getInstance().getUser();
 
         if (user != null) {
-            // Set user details in the TextViews
+
             usernameTextView.setText(user.getName());
             userAddressTextView.setText(user.getAddress());
-            userPhoneTextView.setText(String.valueOf(user.getPhone())); // Convert long to String
+            userPhoneTextView.setText(String.valueOf(user.getPhone()));
         }
+
+        paymentSheet = new PaymentSheet(this, this::onPaymentSheetResult);
 
         handleIntent();
         setupPlaceOrderButton();
@@ -106,6 +133,10 @@ public class CheckoutActivity extends AppCompatActivity {
                 placeOrder(paymentMethod);
             } else if (selectedId == R.id.radioCreditCard) {
                 paymentMethod = "Credit Card";
+                startStripePayment();
+            }
+            else if (selectedId == R.id.radioJazzCash) {
+                paymentMethod = "Jazz Cash";
                 makeJazzCashPayment();
             }
         });
@@ -116,6 +147,70 @@ public class CheckoutActivity extends AppCompatActivity {
         Intent intent = new Intent(CheckoutActivity.this, PaymentActivity.class);
         intent.putExtra("price", String.valueOf(totalPrice));
         startActivityForResult(intent, 0);
+    }
+
+    private void startStripePayment() {
+        fetchPaymentIntent();
+    }
+
+    private void fetchPaymentIntent() {
+        double amount = totalPrice * 100;
+        String url = "https://api.stripe.com/v1/payment_intents";
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null,
+                response -> {
+                    try {
+                        paymentIntentClientSecret = response.getString("client_secret");
+
+                        paymentSheetConfiguration = new PaymentSheet.Configuration(
+                                "Shoplet, Inc."
+                        );
+
+                        paymentSheet.presentWithPaymentIntent(
+                                paymentIntentClientSecret,
+                                paymentSheetConfiguration
+                        );
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Failed to parse payment intent response", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    Toast.makeText(this, "Failed to start payment: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer sk_test_51PGdR6P1pmJbill89Z72Oayc2QlyW4wLddiud2t9ph5QPl3A5aktYUTfQPGWbuQa8G46eh5BEhTz0lAY56Gb0Iv700YaSRpyMW");
+                return headers;
+            }
+
+            @Override
+            public byte[] getBody() {
+                String requestBody = "amount=" + (int) amount + "&currency=pkr";
+                return requestBody.getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+        };
+
+        queue.add(jsonObjectRequest);
+    }
+
+    private void onPaymentSheetResult(PaymentSheetResult paymentSheetResult) {
+        if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
+            Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
+            placeOrder("Credit Card");
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
+            Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
+            Toast.makeText(this, "Payment Canceled", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void placeOrder(String paymentMethod) {
@@ -173,26 +268,25 @@ public class CheckoutActivity extends AppCompatActivity {
 
         orderRef.setValue(order)
                 .addOnSuccessListener(aVoid -> {
-                    // Handle success
+
                     Toast.makeText(CheckoutActivity.this, "Order placed successfully", Toast.LENGTH_SHORT).show();
                     loadAndAnimateGif();
                     CartManager.getInstance().clearCart();
 
-                    // Send email to the user
                     emailContent.append("\nTotal: Rs. ").append(totalPrice).append("\n");
                     emailContent.append("Payment Method: ").append(paymentMethod).append("\n");
                     new EmailSender(user.getEmail(), "Thanks for Order!", emailContent.toString()).execute();
 
                 })
                 .addOnFailureListener(e -> {
-                    // Handle failure
+
                     Toast.makeText(CheckoutActivity.this, "Failed to place order", Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void loadAndAnimateGif() {
         Glide.with(this)
-                .load(R.drawable.orderplaced) // Replace with your GIF resource or URL
+                .load(R.drawable.orderplaced)
                 .into(new DrawableImageViewTarget(imageViewCheckGif) {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -207,13 +301,13 @@ public class CheckoutActivity extends AppCompatActivity {
         Animation slideUpAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_up);
         imageViewCheckGif.startAnimation(slideUpAnimation);
 
-        // Delay to navigate after the GIF animation completes
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(CheckoutActivity.this, MyOrdersActivity.class);
             startActivity(intent);
             finish();
-        }, 3000); // Assuming the GIF and slide animation take about 3 seconds
+        }, 3000);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
