@@ -9,26 +9,34 @@ Shoplet is an Android shopping application that provides users with a seamless s
 - View detailed product descriptions and images.
 - Search for specific products easily.
 
+![Catalog](https://i.ibb.co/6w5DrWP/Screenshot-2024-05-16-113056.png)
+![Products](https://i.ibb.co/PNH7XcX/Screenshot-2024-05-16-113108.png)
 ### 2. Place Orders
 - Add products to the cart.
 - Review the cart before placing an order.
 - Choose preferred payment methods.
 - Get an Email confirmation of your order
 
+![Orders](https://i.ibb.co/pwBjB6j/Screenshot-2024-05-16-113218.png)
+
 ### 3. Reviews
 - Read reviews from other customers.
 - Leave your own reviews for purchased products.
 - Rate products to help other customers.
 
+![Reviews](https://i.ibb.co/MfYBYjB/Screenshot-2024-05-16-113204.png)
 ### 4. Payments
 - **Stripe Payment Integration**: Secure credit card payments via Stripe.
 - **Jazzcash Payment Integration**: Convenient mobile payments via Jazzcash.
+
+![Payment](https://i.ibb.co/khqGZYz/Screenshot-2024-05-16-113305.png)
 
 ### 5. Login/Signup Authentication using Firebase
 - Create a new account or log in with existing credentials.
 - Secure authentication using Firebase Auth.
 - Manage user profiles and account details.
 
+![Login](https://i.ibb.co/QDhkmcS/Screenshot-2024-05-16-112938.png)
 ### 6. Google Admob
 - Banners and Interstitial Ads using Admob
   
