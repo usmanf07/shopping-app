@@ -13,6 +13,7 @@ Shoplet is an Android shopping application that provides users with a seamless s
 - Add products to the cart.
 - Review the cart before placing an order.
 - Choose preferred payment methods.
+- Get an Email confirmation of your order
 
 ### 3. Reviews
 - Read reviews from other customers.
@@ -28,6 +29,9 @@ Shoplet is an Android shopping application that provides users with a seamless s
 - Secure authentication using Firebase Auth.
 - Manage user profiles and account details.
 
+### 6. Google Admob
+- Banners and Interstitial Ads using Admob
+  
 ## Getting Started
 
 ### Prerequisites
