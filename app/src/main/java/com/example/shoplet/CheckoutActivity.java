@@ -72,7 +72,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         PaymentConfiguration.init(
                 getApplicationContext(),
-                "pk_test_51PGdR6P1pmJbill8ushP5HyD7RLhVAMTzla7WCXYjPJoqVyUSgQGOpbpi8ck3ljJvF6NrR1oZYzVnEnjxxIclq1O0021JW6BZQ"
+                "PUBLIC_KEY"
         );
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -183,7 +183,7 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer sk_test_51PGdR6P1pmJbill89Z72Oayc2QlyW4wLddiud2t9ph5QPl3A5aktYUTfQPGWbuQa8G46eh5BEhTz0lAY56Gb0Iv700YaSRpyMW");
+                headers.put("Authorization", "Bearer Secret KEY");
                 return headers;
             }
 

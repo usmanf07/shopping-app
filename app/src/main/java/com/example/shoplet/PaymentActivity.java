@@ -20,9 +20,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class PaymentActivity extends AppCompatActivity {
 
     private WebView mWebView;
-    private final String Jazz_MerchantID = "MC97545";
-    private final String Jazz_Password = "g27s3115v5";
-    private final String Jazz_IntegritySalt = "te05cs59t0";
+    private final String Jazz_MerchantID = "MERCHANT ID";
+    private final String Jazz_Password = "PASSWORD";
+    private final String Jazz_IntegritySalt = "SALT";
     private static final String paymentReturnUrl = "http://localhost/order.php";
 
     @Override
